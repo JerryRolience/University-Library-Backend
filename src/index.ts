@@ -16,7 +16,7 @@ const PORT = parseInt(process.env.PORT || "4000", 10);
 // Enhanced CORS configuration
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || "http://localhost:3000",
+    origin: "*",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
