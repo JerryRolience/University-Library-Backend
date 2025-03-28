@@ -1,9 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../constants";
-import { clearTokenCookie } from "../utils";
 
-// Extend the Request type to include the `user` property
 declare module "express" {
   interface Request {
     user?: {
@@ -15,7 +13,9 @@ declare module "express" {
 
 export function authenticate(req: Request, res: Response, next: NextFunction) {
   try {
-    const token = req.cookies.token;
+    // Get token from Authorization header
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(" ")[1]; // Bearer <token>
 
     if (!token) {
       res.status(401).json({ message: "Access denied. No token provided." });
@@ -31,13 +31,11 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
     next();
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
-      clearTokenCookie(res);
       res.status(401).json({ message: "Session expired.Please log in again." });
       return;
     }
 
     if (error instanceof jwt.JsonWebTokenError) {
-      clearTokenCookie(res);
       res.status(401).json({ message: "Invalid token. Please log in again." });
       return;
     }

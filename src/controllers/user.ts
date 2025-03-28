@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { createUserHandler, getUsersHandler, signInHandler } from "../handlers";
-import { clearTokenCookie } from "../utils";
 
 export async function getUsers(
   req: Request,
@@ -29,16 +28,6 @@ export async function signIn(req: Request, res: Response, next: NextFunction) {
   try {
     const { email, password } = req.body;
     const token = await signInHandler({ email, password });
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true, // Always true in production (HTTPS required)
-      sameSite: "none", // Required for cross-site cookies
-      maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
-      domain: req.hostname.endsWith("onrender.com")
-        ? ".onrender.com"
-        : undefined,
-      path: "/", // Ensure cookie is accessible across all paths
-    });
 
     res.status(200).json({ message: "User signed in successfully", token });
   } catch (error) {
@@ -48,7 +37,6 @@ export async function signIn(req: Request, res: Response, next: NextFunction) {
 
 export async function logout(req: Request, res: Response, next: NextFunction) {
   try {
-    clearTokenCookie(res);
     res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
     next(error);

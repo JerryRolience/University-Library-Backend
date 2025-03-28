@@ -13,6 +13,10 @@ export async function signInHandler(
     throw new Error("Email and Password are required");
   }
 
+  if (!JWT_SECRET) {
+    throw new Error("JWT_SECRET is not configured");
+  }
+
   const user = await User.findOne({ email, del: { $ne: true } });
   if (!user) {
     throw new Error("User not found");

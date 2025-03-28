@@ -6,8 +6,8 @@ import { rateLimiter } from "../middleware/ratelimiter";
 const userRoutes = Router();
 
 userRoutes.get("/getUsers", authenticate, Controllers.getUsers);
-userRoutes.post("/signUp", rateLimiter, Controllers.signUp);
-userRoutes.post("/signIn", rateLimiter, Controllers.signIn);
+userRoutes.post("/sign-up", rateLimiter, Controllers.signUp);
+userRoutes.post("/sign-in", rateLimiter, Controllers.signIn);
 userRoutes.get("/logout", authenticate, Controllers.logout);
 
 export { userRoutes };
