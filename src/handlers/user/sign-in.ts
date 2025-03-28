@@ -23,11 +23,12 @@ export async function signInHandler(
   if (!isMatch) {
     throw new Error("Invalid password");
   }
+  console.log("JWT Secret:", JWT_SECRET);
 
   // Generate JWT
   const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, {
     expiresIn: JWT_EXPIRES_IN,
   });
-
+  console.log("JWT Secret:", process.env.JWT_SECRET);
   return token;
 }
