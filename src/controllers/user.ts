@@ -44,7 +44,6 @@ export async function signIn(req: Request, res: Response, next: NextFunction) {
 
 export async function logout(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("logout");
     clearTokenCookie(res);
     res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {

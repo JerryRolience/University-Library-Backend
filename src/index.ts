@@ -99,8 +99,6 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   res.status(status).json({ message, data });
 });
 
-console.log("Server time:", new Date().toISOString());
-
 // MongoDB connection and server startup
 mongoose
   .connect(process.env.MONGODB_URI as string)
