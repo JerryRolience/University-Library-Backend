@@ -5,6 +5,7 @@ import cors from "cors";
 import { join } from "path";
 import { authRoutes, userRoutes } from "./routes";
 import cookieParser from "cookie-parser";
+// import { serve } from "@upstash/workflow/express";
 
 // Load environment variables
 dotenv.config();
@@ -54,6 +55,20 @@ app.get("/", (req: Request, res: Response) => {
 // Route handlers
 app.use("/user", userRoutes);
 app.use("/api/auth", authRoutes);
+
+// app.post(
+//   "/workflow",
+//   serve<{ message: string }>(async (context) => {
+//     const res1 = await context.run("step1", async () => {
+//       const message = context.requestPayload.message;
+//       return message;
+//     });
+
+//     await context.run("step2", async () => {
+//       console.log(res1);
+//     });
+//   })
+// );
 
 // Global error handler
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {

@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { createUserHandler, getUsersHandler, signInHandler } from "../handlers";
-import { clear } from "console";
 import { clearTokenCookie } from "../utils";
 
 export async function getUsers(
@@ -36,10 +35,7 @@ export async function signIn(req: Request, res: Response, next: NextFunction) {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
 
-    res.status(200).json({
-      message: "User signed in successfully",
-      token, // Only for debugging, remove in production
-    });
+    res.status(200).json({ message: "User signed in successfully", token });
   } catch (error) {
     next(error);
   }

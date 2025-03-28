@@ -16,7 +16,6 @@ declare module "express" {
 export function authenticate(req: Request, res: Response, next: NextFunction) {
   try {
     const token = req.cookies.token;
-    console.log("token authenticate:", token);
 
     if (!token) {
       res.status(401).json({ message: "Access denied. No token provided." });
