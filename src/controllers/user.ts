@@ -31,9 +31,13 @@ export async function signIn(req: Request, res: Response, next: NextFunction) {
     const token = await signInHandler({ email, password });
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Only secure in production
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 3 * 24 * 60 * 60 * 1000,
+      secure: true, // Always true in production (HTTPS required)
+      sameSite: "none", // Required for cross-site cookies
+      maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
+      domain: req.hostname.endsWith("onrender.com")
+        ? ".onrender.com"
+        : undefined,
+      path: "/", // Ensure cookie is accessible across all paths
     });
 
     res.status(200).json({ message: "User signed in successfully", token });

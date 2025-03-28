@@ -17,11 +17,12 @@ const PORT = parseInt(process.env.PORT || "4000", 10);
 app.use(
   cors({
     origin: [
-      "http://localhost:3000", // For local development
-      "https://vercel.com/jerryroliences-projects/university-library", // Your actual deployed frontend URL
+      "http://localhost:3000",
+      "https://vercel.com/jerryroliences-projects/university-library",
     ],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+    exposedHeaders: ["Set-Cookie"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
