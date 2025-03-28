@@ -16,11 +16,13 @@ const PORT = parseInt(process.env.PORT || "4000", 10);
 // Enhanced CORS configuration
 app.use(
   cors({
-    origin: "*",
+    origin: [
+      "http://localhost:3000", // For local development
+      "https://vercel.com/jerryroliences-projects/university-library", // Your actual deployed frontend URL
+    ],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    exposedHeaders: ["Set-Cookie"],
   })
 );
 
@@ -32,10 +34,20 @@ app.set("trust proxy", 1);
 
 // Additional headers middleware
 app.use((req, res, next) => {
+  const allowedOrigins = [
+    "http://localhost:3000",
+    "https://vercel.com/jerryroliences-projects/university-library",
+  ];
+  const origin = req.headers.origin;
+
+  if (origin && allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
   res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization, Cookie"
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
   next();
 });
