@@ -43,6 +43,9 @@ const userSchema = new Schema<UserType>(
       type: Date,
       default: Date.now,
     },
+    refreshToken: {
+      type: String,
+    },
     del: {
       type: Boolean,
       default: false,

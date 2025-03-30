@@ -21,5 +21,6 @@ export interface UserType {
   role: string;
   status: string;
   lastActivityDate: Date;
+  refreshToken: string;
   del: boolean;
 }

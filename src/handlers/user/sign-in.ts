@@ -2,7 +2,12 @@ import { User } from "../../models";
 import bcrypt from "bcryptjs";
 import { CreateUserFields } from "../../utils";
 import jwt from "jsonwebtoken";
-import { JWT_EXPIRES_IN, JWT_SECRET } from "../../constants";
+import {
+  JWT_EXPIRES_IN,
+  JWT_SECRET,
+  REFRESH_TOKEN_EXPIRES_IN,
+  REFRESH_TOKEN_SECRET,
+} from "../../constants";
 
 export async function signInHandler(
   fields: Pick<CreateUserFields, "email" | "password">
@@ -28,9 +33,23 @@ export async function signInHandler(
     throw new Error("Invalid password");
   }
 
-  // Generate JWT
-  const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, {
-    expiresIn: JWT_EXPIRES_IN,
+  const accessToken = jwt.sign(
+    { userId: user.id, email: user.email },
+    JWT_SECRET,
+    { expiresIn: JWT_EXPIRES_IN }
+  );
+
+  const refreshToken = jwt.sign({ userId: user.id }, REFRESH_TOKEN_SECRET, {
+    expiresIn: REFRESH_TOKEN_EXPIRES_IN,
   });
-  return token;
+
+  // Save refresh token to database
+  user.refreshToken = refreshToken;
+  await user.save();
+
+  return {
+    accessToken,
+    refreshToken,
+    user: { fullName: user.fullName, email: user.email, role: user.role },
+  };
 }

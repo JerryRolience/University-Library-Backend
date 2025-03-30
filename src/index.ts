@@ -18,29 +18,11 @@ app.use(
       "http://localhost:3000",
       "https://vercel.com/jerryroliences-projects/university-library",
     ],
-    credentials: false,
+    credentials: true, // Allow credentials (cookies, authentication headers)
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
-
-app.use((req, res, next) => {
-  const allowedOrigins = [
-    "http://localhost:3000",
-    "https://vercel.com/jerryroliences-projects/university-library",
-  ];
-  const origin = req.headers.origin;
-
-  if (origin && allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
-  }
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  next();
-});
 
 // Body parsers
 app.use(express.json({ limit: "10mb" }));
