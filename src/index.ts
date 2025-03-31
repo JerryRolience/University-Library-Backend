@@ -4,7 +4,6 @@ import mongoose, { Error } from "mongoose";
 import cors from "cors";
 import { join } from "path";
 import { authRoutes, userRoutes } from "./routes";
-// import { serve } from "@upstash/workflow/express";
 
 // Load environment variables
 dotenv.config();
@@ -12,17 +11,23 @@ dotenv.config();
 const app = express();
 const PORT = parseInt(process.env.PORT || "4000", 10);
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "https://vercel.com/jerryroliences-projects/university-library",
-    ],
-    credentials: true, // Allow credentials (cookies, authentication headers)
-    allowedHeaders: ["Content-Type", "Authorization"],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  })
-);
+// Updated CORS configuration
+const corsOptions = {
+  origin: [
+    "http://localhost:3000", // Local development
+    "https://university-library-ac9s.vercel.app", // Your Vercel deployment
+    "https://university-library-*.vercel.app", // All preview deployments
+    "https://university-library.vercel.app", // Your production domain
+  ],
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+};
+
+app.use(cors(corsOptions));
+
+// Handle preflight requests
+app.options("*", cors(corsOptions));
 
 // Body parsers
 app.use(express.json({ limit: "10mb" }));
@@ -33,26 +38,12 @@ app.use(express.static(join(__dirname, "public")));
 
 // Root route
 app.get("/", (req: Request, res: Response) => {
-  res.send("Welcome to the Thread Backend API!");
+  res.send("Welcome to the University Library Backend API!");
 });
 
 // Route handlers
 app.use("/user", userRoutes);
 app.use("/api/auth", authRoutes);
-
-// app.post(
-//   "/workflow",
-//   serve<{ message: string }>(async (context) => {
-//     const res1 = await context.run("step1", async () => {
-//       const message = context.requestPayload.message;
-//       return message;
-//     });
-
-//     await context.run("step2", async () => {
-//       console.log(res1);
-//     });
-//   })
-// );
 
 // Global error handler
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
@@ -77,7 +68,7 @@ mongoose
   .then(() => {
     console.log("Connected to MongoDB successfully.");
     app.listen(PORT, "0.0.0.0", () => {
-      console.log(`Listening on port :${PORT}`);
+      console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((error: Error) => {
