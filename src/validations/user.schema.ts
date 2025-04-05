@@ -5,15 +5,27 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 const universityIdRegex = /^[A-Z]{3}\/\d{4}\/\d{2}$/;
 
+// Common password validation reusable across schemas
+const passwordValidation = z
+  .string()
+  .min(8, "Password must be at least 8 characters long")
+  .max(64, "Password cannot exceed 64 characters")
+  .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+  .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+  .regex(/[0-9]/, "Password must contain at least one number")
+  .regex(
+    /[^A-Za-z0-9]/,
+    "Password must contain at least one special character (e.g., !@#$%^&*)"
+  )
+  .refine(
+    (password) => !password.includes(" "),
+    "Password cannot contain spaces"
+  );
+
 export const CreateUserSchema = z.object({
   fullName: z.string().min(2).max(100),
   email: z.string().regex(emailRegex, "Invalid email format"),
-  password: z
-    .string()
-    .regex(
-      passwordRegex,
-      "Password must contain at least 8 characters, one uppercase, one lowercase and one number"
-    ),
+  password: passwordValidation,
   universityId: z.string().refine(
     (val) => {
       // Basic format check
