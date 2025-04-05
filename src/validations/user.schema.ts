@@ -1,0 +1,39 @@
+import { z } from "zod";
+
+// Common patterns
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+const universityIdRegex = /^[A-Z]{3}\/\d{4}\/\d{2}$/;
+
+export const CreateUserSchema = z.object({
+  fullName: z.string().min(2).max(100),
+  email: z.string().regex(emailRegex, "Invalid email format"),
+  password: z
+    .string()
+    .regex(
+      passwordRegex,
+      "Password must contain at least 8 characters, one uppercase, one lowercase and one number"
+    ),
+  universityId: z.string().refine(
+    (val) => {
+      // Basic format check
+      const formatValid = /^[A-Z]{3}\/\d{4}\/\d{2}$/.test(val);
+      if (!formatValid) return false;
+
+      // Extract year portion
+      const yearPart = val.split("/")[2];
+      const fullYear = 2000 + parseInt(yearPart);
+
+      // Year range check (2020-2030)
+      return fullYear >= 2020 && fullYear <= 2030;
+    },
+    {
+      message:
+        "University ID must be in format: ABC/1234/20-30 (where last digits represent year 2020-2030)",
+    }
+  ),
+  universityCard: z.string().min(1, "University card is required"),
+  role: z.enum(["USER", "STUDENT", "ADMIN"]).default("STUDENT"),
+});
+
+export type CreateUserFields = z.infer<typeof CreateUserSchema>;

@@ -1,9 +1,11 @@
 import dotenv from "dotenv";
 import express, { Request, Response, NextFunction } from "express";
-import mongoose, { Error } from "mongoose";
+import mongoose, { Error as MongoError } from "mongoose";
 import cors from "cors";
 import { join } from "path";
-import { authRoutes, userRoutes } from "./routes";
+import { authRoutes, bookRoutes, userRoutes } from "./routes";
+import { ZodError } from "zod";
+import { AppError, NotFoundError } from "./utils/error-types";
 
 // Load environment variables
 dotenv.config();
@@ -14,10 +16,10 @@ const PORT = parseInt(process.env.PORT || "4000", 10);
 // Updated CORS configuration
 const corsOptions = {
   origin: [
-    "http://localhost:3000", // Local development
-    "https://university-library-ac9s.vercel.app", // Your Vercel deployment
-    "https://university-library-*.vercel.app", // All preview deployments
-    "https://university-library.vercel.app", // Your production domain
+    "http://localhost:3000",
+    "https://university-library-ac9s.vercel.app",
+    "https://university-library-*.vercel.app",
+    "https://university-library.vercel.app",
   ],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -25,8 +27,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-// Handle preflight requests
 app.options("*", cors(corsOptions));
 
 // Body parsers
@@ -44,22 +44,78 @@ app.get("/", (req: Request, res: Response) => {
 // Route handlers
 app.use("/user", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/book", bookRoutes);
+
+// 404 handler
+app.use((req: Request, res: Response, next: NextFunction) => {
+  next(new NotFoundError("Endpoint not found"));
+});
 
 // Global error handler
-app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  console.error(error);
+app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
+  console.error("Error:", error);
 
-  let status = error.statusCode || 500;
-  let message = error.message || "An unexpected error occurred.";
-  let data = error.data;
+  // Default error response
+  let statusCode = 500;
+  let message = "An unexpected error occurred";
+  let errors: any[] = [];
 
-  if (error.name === "ValidationError") {
-    status = 400;
-    message = "Validation failed.";
-    data = Object.values(error.errors).map((err: any) => err.message);
+  // Handle different error types
+  if (error instanceof AppError) {
+    statusCode = error.statusCode;
+    message = error.message;
+    if (error.data)
+      errors = Array.isArray(error.data) ? error.data : [error.data];
+  } else if (error instanceof ZodError) {
+    statusCode = 400;
+    message = "Validation error";
+    errors = error.errors.map((err) => ({
+      path: err.path.join("."),
+      message: err.message,
+    }));
+  } else if (error instanceof MongoError) {
+    // Handle specific MongoDB errors
+    switch (error.name) {
+      case "ValidationError":
+        statusCode = 400;
+        message = "Database validation failed";
+        errors = Object.values((error as any).errors).map(
+          (err: any) => err.message
+        );
+        break;
+      case "CastError":
+        statusCode = 400;
+        message = "Invalid data format";
+        break;
+      case "MongoServerError":
+        if ((error as any).code === 11000) {
+          statusCode = 409;
+          message = "Duplicate key error";
+          const keyValue = (error as any).keyValue;
+          errors = Object.entries(keyValue).map(
+            ([key, value]) => `${key} '${value}' already exists`
+          );
+        }
+        break;
+      default:
+        message = "Database error occurred";
+    }
+  } else if (error instanceof Error) {
+    message = error.message;
   }
 
-  res.status(status).json({ message, data });
+  // Development vs production error response
+  const response: any = {
+    success: false,
+    message,
+    ...(errors.length > 0 && { errors }),
+  };
+
+  if (process.env.NODE_ENV === "development") {
+    response.stack = error instanceof Error ? error.stack : undefined;
+  }
+
+  res.status(statusCode).json(response);
 });
 
 // MongoDB connection and server startup
@@ -71,6 +127,7 @@ mongoose
       console.log(`Server running on port ${PORT}`);
     });
   })
-  .catch((error: Error) => {
+  .catch((error: MongoError) => {
     console.error("Error connecting to MongoDB:", error.message);
+    process.exit(1);
   });

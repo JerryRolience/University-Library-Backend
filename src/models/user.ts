@@ -15,6 +15,7 @@ const userSchema = new Schema<UserType>(
       type: String,
       required: true,
       unique: true,
+      match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"],
     },
     password: {
       type: String,
@@ -24,6 +25,19 @@ const userSchema = new Schema<UserType>(
       type: String,
       required: true,
       unique: true,
+      validate: {
+        validator: function (v: string) {
+          // Check format
+          if (!/^[A-Z]{3}\/\d{4}\/\d{2}$/.test(v)) return false;
+
+          // Check year range
+          const yearPart = v.split("/")[2];
+          const fullYear = 2000 + parseInt(yearPart);
+          return fullYear >= 2020 && fullYear <= 2030;
+        },
+        message:
+          "University ID must be in format: ABC/1234/20-30 (year 2020-2030)",
+      },
     },
     universityCard: {
       type: String,
@@ -37,7 +51,7 @@ const userSchema = new Schema<UserType>(
     role: {
       type: String,
       enum: ROLES_ENUM,
-      default: "USER",
+      default: "STUDENT",
     },
     lastActivityDate: {
       type: Date,

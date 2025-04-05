@@ -14,15 +14,20 @@ export async function getCurrentUser(
     }
 
     const userId = req.user.userId;
-    const user = await User.findOne({ id: userId, del: { $ne: true } })
-      .select("fullName email")
-      .lean();
+    const user = await User.findOne({ id: userId, del: { $ne: true } }).lean();
 
     if (!user) {
       throw new Error("User not found");
     }
 
-    res.status(200).json({ name: user.fullName, email: user.email });
+    res.status(200).json({
+      name: user.fullName,
+      email: user.email,
+      role: user.role,
+      universityID: user.universityID,
+      universityCard: user.universityCard,
+      status: user.status,
+    });
   } catch (error) {
     next(error);
   }

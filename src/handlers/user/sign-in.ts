@@ -50,6 +50,13 @@ export async function signInHandler(
   return {
     accessToken,
     refreshToken,
-    user: { fullName: user.fullName, email: user.email, role: user.role },
+    user: {
+      name: user.fullName,
+      email: user.email,
+      role: user.role,
+      universityID: user.universityID,
+      universityCard: user.universityCard,
+      status: user.status,
+    },
   };
 }
