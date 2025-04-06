@@ -4,6 +4,7 @@ import {
   getBooksHandler,
   getBookHandler,
   borrowBookHandler,
+  getUserBorrowedBooksHandler,
 } from "../handlers";
 
 export async function createBook(
@@ -84,5 +85,42 @@ export async function borrowBook(
       }
     }
     next(error);
+  }
+}
+
+export async function getBorrowedBooks(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const userId = req.user?.userId;
+    if (!userId) {
+      res.status(401).json({ message: "Unauthorized" });
+      return;
+    }
+
+    // Get pagination parameters from query (default to page 1 and 10 items per page)
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    const { books, totalCount } = await getUserBorrowedBooksHandler(
+      userId,
+      page,
+      limit
+    );
+
+    res.status(200).json({
+      success: true,
+      data: books,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(totalCount / limit),
+        totalItems: totalCount,
+        itemsPerPage: limit,
+      },
+    });
+  } catch (err) {
+    next(err);
   }
 }

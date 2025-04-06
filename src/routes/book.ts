@@ -20,4 +20,10 @@ bookRoutes.post(
   Controllers.borrowBook
 );
 
+bookRoutes.get(
+  "/get-user-borrowed-books",
+  authenticate,
+  Controllers.getBorrowedBooks
+);
+
 export { bookRoutes };

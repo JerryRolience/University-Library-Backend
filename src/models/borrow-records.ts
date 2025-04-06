@@ -1,6 +1,5 @@
 import { Schema, model } from "mongoose";
 import { BORROW_STATUS_ENUM, BorrowRecordType } from "../utils";
-import { randomUUID } from "crypto";
 
 const borrowRecordsSchema = new Schema<BorrowRecordType>(
   {
