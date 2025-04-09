@@ -18,11 +18,20 @@ export interface UserType {
   password: string;
   universityID: string;
   universityCard: string;
+  profilePic?: string;
   role: string;
   status: string;
   lastActivityDate: Date;
   refreshToken: string;
   del: boolean;
+}
+
+export interface EditedUserType {
+  fullName: string;
+  email: string;
+  universityID: string;
+  universityCard: string;
+  profilePic?: string;
 }
 
 export interface BookType {

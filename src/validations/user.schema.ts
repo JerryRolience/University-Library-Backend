@@ -45,6 +45,7 @@ export const CreateUserSchema = z.object({
     }
   ),
   universityCard: z.string().min(1, "University card is required"),
+  profilePic: z.string().min(1, "University card is required"),
   role: z.enum(["USER", "STUDENT", "ADMIN"]).default("STUDENT"),
 });
 

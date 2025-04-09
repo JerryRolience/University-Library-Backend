@@ -39,6 +39,9 @@ const userSchema = new Schema<UserType>(
           "University ID must be in format: ABC/1234/20-30 (year 2020-2030)",
       },
     },
+    profilePic: {
+      type: String,
+    },
     universityCard: {
       type: String,
       required: true,

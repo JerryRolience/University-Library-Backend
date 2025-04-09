@@ -16,5 +16,16 @@ userRoutes.get(
   Controllers.updateUserLastActivity
 );
 userRoutes.post("/get-user-state", Controllers.getUserState);
+userRoutes.post(
+  "/update-user-profile",
+  authenticate,
+  Controllers.updateUserProfile
+);
+
+userRoutes.post(
+  "/update-user-pic",
+  authenticate,
+  Controllers.updateUserProfilePic
+);
 
 export { userRoutes };

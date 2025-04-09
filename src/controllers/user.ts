@@ -1,12 +1,15 @@
 import { Request, Response, NextFunction } from "express";
 import {
   createUserHandler,
+  deleteUserHandler,
+  updateUserProfileHandler,
   getUsersHandler,
   getUserStateHandler,
   logoutHandler,
   refreshTokenHandler,
   signInHandler,
   updateUserLastActivityHandler,
+  updateUserProfilePicHandler,
 } from "../handlers";
 
 export async function getUsers(
@@ -45,6 +48,56 @@ export async function signIn(req: Request, res: Response, next: NextFunction) {
       refreshToken: data.refreshToken,
       user: data.user,
     });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateUserProfile(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const userId = req.user?.userId;
+    const userData = req.body;
+    if (!userId) throw new Error("User ID is required");
+
+    const updatedUser = await updateUserProfileHandler(userId, userData);
+    res.status(200).json({ success: true, user: updatedUser });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateUserProfilePic(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const userId = req.user?.userId;
+    const profilePic = req.body;
+    if (!userId) throw new Error("User ID is required");
+
+    const updatedUser = await updateUserProfilePicHandler(userId, profilePic);
+    res.status(200).json({ success: true, user: updatedUser });
+  } catch (error) {
+    next(error);
+  }
+}
+export async function deleteUser(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const userId = req.user?.userId;
+
+    if (!userId) throw new Error("User ID is required");
+
+    await deleteUserHandler(userId);
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     next(error);
   }
