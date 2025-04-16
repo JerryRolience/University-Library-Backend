@@ -5,6 +5,7 @@ import {
   getBookHandler,
   borrowBookHandler,
   getUserBorrowedBooksHandler,
+  borrowRecordsHandler,
 } from "../handlers";
 
 export async function createBook(
@@ -30,6 +31,20 @@ export async function getAllBooks(
     const books = await getBooksHandler();
 
     res.status(200).json(books);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function getAllBooksRecord(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const records = await borrowRecordsHandler();
+
+    res.status(200).json(records);
   } catch (err) {
     next(err);
   }

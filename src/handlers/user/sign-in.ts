@@ -57,6 +57,7 @@ export async function signInHandler(
       universityID: user.universityID,
       universityCard: user.universityCard,
       status: user.status,
+      profilePic: user.profilePic,
     },
   };
 }

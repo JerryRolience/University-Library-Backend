@@ -12,6 +12,11 @@ bookRoutes.post(
 );
 
 bookRoutes.get("/get-books", Controllers.getAllBooks);
+bookRoutes.get(
+  "/get-borrow-records",
+  // authenticate,
+  Controllers.getAllBooksRecord
+);
 bookRoutes.post("/get-book", Controllers.getBook);
 bookRoutes.post(
   "/borrow-book",

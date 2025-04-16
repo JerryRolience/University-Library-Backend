@@ -27,6 +27,7 @@ export async function getCurrentUser(
       universityID: user.universityID,
       universityCard: user.universityCard,
       status: user.status,
+      profilePic: user.profilePic,
     });
   } catch (error) {
     next(error);

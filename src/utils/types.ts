@@ -24,6 +24,8 @@ export interface UserType {
   lastActivityDate: Date;
   refreshToken: string;
   del: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface EditedUserType {
