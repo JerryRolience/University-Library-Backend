@@ -31,8 +31,8 @@ export interface UserType {
 export interface EditedUserType {
   fullName: string;
   email: string;
-  universityID: string;
-  universityCard: string;
+  universityID?: string;
+  universityCard?: string;
   profilePic?: string;
 }
 
@@ -100,3 +100,56 @@ export type BorrowBookErrorResponse = {
 export type BorrowBookResponse =
   | BorrowBookSuccessResponse
   | BorrowBookErrorResponse;
+
+export interface SearchBook {
+  query?: string;
+  genre?: string;
+  minRating?: number;
+  maxRating?: number;
+  availableOnly?: boolean | string; // supports boolean or "true" from query params
+  page?: number;
+  pageSize?: number;
+}
+
+export interface SearchCriteria {
+  del: { $ne: boolean };
+  $or: (
+    | { title: { $regex: string; $options: string } }
+    | { author: { $regex: string; $options: string } }
+  )[];
+  genre?: string;
+  rating?: {
+    $gte?: number;
+    $lte?: number;
+  };
+  availableCopies?: { $gt: number };
+}
+
+export const DEFAULT_PAGE_SIZE = 10;
+
+export interface AdminSearch {
+  query?: string;
+  status?: string;
+  role?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface AdminSearchCriteria {
+  del: { $ne: boolean };
+  $or: (
+    | { title: { $regex: string; $options: string } }
+    | { author: { $regex: string; $options: string } }
+  )[];
+}
+
+export interface AdminUserSearchCriteria {
+  del: { $ne: boolean };
+  $or: (
+    | { fullName: { $regex: string; $options: string } }
+    | { email: { $regex: string; $options: string } }
+    | { universityID: { $regex: string; $options: string } }
+  )[];
+  status?: string;
+  role?: string;
+}

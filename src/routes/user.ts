@@ -17,15 +17,15 @@ userRoutes.get(
 );
 userRoutes.post("/get-user-state", Controllers.getUserState);
 userRoutes.post(
-  "/update-user-profile",
+  "/update-user-id-details",
   authenticate,
-  Controllers.updateUserProfile
+  Controllers.updateUserIDDetails
 );
 
 userRoutes.post(
-  "/update-user-pic",
+  "/update-user-profile",
   authenticate,
-  Controllers.updateUserProfilePic
+  Controllers.updateUserProfile
 );
 
 export { userRoutes };

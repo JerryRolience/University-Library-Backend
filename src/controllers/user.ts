@@ -2,14 +2,14 @@ import { Request, Response, NextFunction } from "express";
 import {
   createUserHandler,
   deleteUserHandler,
-  updateUserProfileHandler,
+  updateUserIDDetailsHandler,
   getUsersHandler,
   getUserStateHandler,
   logoutHandler,
   refreshTokenHandler,
   signInHandler,
   updateUserLastActivityHandler,
-  updateUserProfilePicHandler,
+  updateUserProfileHandler,
 } from "../handlers";
 
 export async function getUsers(
@@ -30,7 +30,7 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
     await createUserHandler(req.body);
 
     res
-      .status(201)
+      .status(200)
       .json({ success: true, message: "User created successfully" });
   } catch (error) {
     next(error);
@@ -53,7 +53,7 @@ export async function signIn(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function updateUserProfile(
+export async function updateUserIDDetails(
   req: Request,
   res: Response,
   next: NextFunction
@@ -63,14 +63,14 @@ export async function updateUserProfile(
     const userData = req.body;
     if (!userId) throw new Error("User ID is required");
 
-    const updatedUser = await updateUserProfileHandler(userId, userData);
+    const updatedUser = await updateUserIDDetailsHandler(userId, userData);
     res.status(200).json({ success: true, user: updatedUser });
   } catch (error) {
     next(error);
   }
 }
 
-export async function updateUserProfilePic(
+export async function updateUserProfile(
   req: Request,
   res: Response,
   next: NextFunction
@@ -80,7 +80,7 @@ export async function updateUserProfilePic(
     const profilePic = req.body;
     if (!userId) throw new Error("User ID is required");
 
-    const updatedUser = await updateUserProfilePicHandler(userId, profilePic);
+    const updatedUser = await updateUserProfileHandler(userId, profilePic);
     res.status(200).json({ success: true, user: updatedUser });
   } catch (error) {
     next(error);

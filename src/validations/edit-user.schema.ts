@@ -1,11 +1,8 @@
-import { profile } from "console";
 import { z } from "zod";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const EditUserSchema = z.object({
-  fullName: z.string().min(2).max(100),
-  email: z.string().regex(emailRegex, "Invalid email format"),
   universityID: z.string().refine(
     (val) => {
       // Basic format check
@@ -28,8 +25,11 @@ export const EditUserSchema = z.object({
 });
 
 export const EditUserProfileSchema = z.object({
+  fullName: z.string().min(2).max(100),
+  email: z.string().regex(emailRegex, "Invalid email format"),
   profilePic: z.string().min(1, "Profile picture is required"),
 });
+
 export type EditProfileFields = z.infer<typeof EditUserProfileSchema>;
 
 export type EditUserFields = z.infer<typeof EditUserSchema>;

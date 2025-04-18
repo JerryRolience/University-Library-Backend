@@ -5,6 +5,6 @@ export * from "./update-user-last-activity";
 export * from "./logout";
 export * from "./get-user-state";
 export * from "./refresh-token";
-export * from "./update-user-profile";
+export * from "./update-user-id";
 export * from "./delete-user";
-export * from "./update-profile-pic";
+export * from "./update-profile";

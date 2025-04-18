@@ -1,13 +1,13 @@
 import { User } from "../../models";
 import { EditedUserType } from "../../utils";
-import { EditUserSchema } from "../../validations/edit-user.schema";
+import { EditUserProfileSchema } from "../../validations/edit-user.schema";
 
 export async function updateUserProfileHandler(
   userId: string,
   userData: EditedUserType
 ) {
   // Validate input
-  const validatedData = EditUserSchema.parse(userData);
+  const validatedData = EditUserProfileSchema.parse(userData);
 
   // Check if user already exists
   const existingUser = await User.findOne({
@@ -30,8 +30,7 @@ export async function updateUserProfileHandler(
     }
   }
 
-  // 4. Prepare update data (only update allowed fields)
-  const updateData: Partial<EditedUserType> = {
+  const updateData = {
     ...validatedData,
   };
 
@@ -51,6 +50,7 @@ export async function updateUserProfileHandler(
     email: updatedUser.email,
     universityID: updatedUser.universityID,
     universityCard: updatedUser.universityCard,
+    profilePic: updatedUser.profilePic,
     status: updatedUser.status,
     role: updatedUser.role,
   };

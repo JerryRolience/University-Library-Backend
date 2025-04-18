@@ -30,5 +30,6 @@ bookRoutes.get(
   authenticate,
   Controllers.getBorrowedBooks
 );
+bookRoutes.get("/search-book", Controllers.searchBooks);
 
 export { bookRoutes };

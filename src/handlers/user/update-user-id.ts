@@ -1,12 +1,13 @@
 import { User } from "../../models";
-import { EditUserProfileSchema } from "../../validations/edit-user.schema";
+import { EditedUserType } from "../../utils";
+import { EditUserSchema } from "../../validations/edit-user.schema";
 
-export async function updateUserProfilePicHandler(
+export async function updateUserIDDetailsHandler(
   userId: string,
-  profilePic: string
+  userData: EditedUserType
 ) {
   // Validate input
-  const validatedData = EditUserProfileSchema.parse(profilePic);
+  const validatedData = EditUserSchema.parse(userData);
 
   // Check if user already exists
   const existingUser = await User.findOne({
@@ -17,7 +18,8 @@ export async function updateUserProfilePicHandler(
     throw new Error("User not found");
   }
 
-  const updateData = {
+  // 4. Prepare update data (only update allowed fields)
+  const updateData: Partial<EditedUserType> = {
     ...validatedData,
   };
 
@@ -37,8 +39,8 @@ export async function updateUserProfilePicHandler(
     email: updatedUser.email,
     universityID: updatedUser.universityID,
     universityCard: updatedUser.universityCard,
-    profilePic: updatedUser.profilePic,
     status: updatedUser.status,
     role: updatedUser.role,
+    profilePic: updatedUser.profilePic,
   };
 }
