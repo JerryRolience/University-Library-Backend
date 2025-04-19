@@ -76,6 +76,12 @@ export interface BorrowRecordType {
   returnDate?: Date;
   status: string;
   del: boolean;
+  emailStatus: {
+    borrowedSent: { type: Boolean };
+    dueReminderSent: { type: Boolean };
+    overdueNotices: { type: Number };
+    lastOverdueNotice: { type: Date };
+  };
 }
 
 // types.ts

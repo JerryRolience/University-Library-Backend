@@ -6,6 +6,7 @@ import {
   borrowBookHandler,
   getUserBorrowedBooksHandler,
   borrowRecordsHandler,
+  getBorrowStatusHandler,
 } from "../handlers";
 
 export async function createBook(
@@ -137,5 +138,26 @@ export async function getBorrowedBooks(
     });
   } catch (err) {
     next(err);
+  }
+}
+
+export async function getBorrowStatus(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { borrowId } = req.body;
+
+    if (!borrowId) {
+      res.status(400).json({ error: "borrowId is required" });
+      return;
+    }
+
+    const status = await getBorrowStatusHandler(borrowId);
+
+    res.status(200).json({ status });
+  } catch (error) {
+    next(error);
   }
 }

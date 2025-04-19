@@ -9,4 +9,6 @@ export const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET as string;
 
 export const ONE_DAY_IN_MS = 1000 * 60 * 60 * 24;
 export const THREE_DAYS_IN_MS = ONE_DAY_IN_MS * 3;
+export const FIVE_DAYS_IN_MS = ONE_DAY_IN_MS * 3;
+export const SIX_DAYS_IN_MS = ONE_DAY_IN_MS * 3;
 export const ONE_MONTH_IN_MS = ONE_DAY_IN_MS * 30;

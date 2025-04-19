@@ -32,4 +32,6 @@ bookRoutes.get(
 );
 bookRoutes.get("/search-book", Controllers.searchBooks);
 
+bookRoutes.get("/borrow-status", Controllers.getBorrowStatus);
+
 export { bookRoutes };
