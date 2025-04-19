@@ -2,8 +2,6 @@ import { z } from "zod";
 
 // Common patterns
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-const universityIdRegex = /^[A-Z]{3}\/\d{4}\/\d{2}$/;
 
 // Common password validation reusable across schemas
 const passwordValidation = z
@@ -45,7 +43,6 @@ export const CreateUserSchema = z.object({
     }
   ),
   universityCard: z.string().min(1, "University card is required"),
-  profilePic: z.string().min(1, "University card is required"),
   role: z.enum(["USER", "STUDENT", "ADMIN"]).default("STUDENT"),
 });
 
