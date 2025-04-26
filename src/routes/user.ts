@@ -28,4 +28,16 @@ userRoutes.post(
   Controllers.updateUserProfile
 );
 
+userRoutes.post("/update-user-role", authenticate, Controllers.updateUserRole);
+userRoutes.post(
+  "/approve-user-account",
+  authenticate,
+  Controllers.approveUserAccount
+);
+userRoutes.post(
+  "/reject-user-account",
+  authenticate,
+  Controllers.rejectUserAccount
+);
+
 export { userRoutes };

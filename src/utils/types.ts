@@ -1,6 +1,6 @@
 export const SALT_ROUNDS = 10;
-export const STATUS_ENUM = ["PENDING", "APPORVED", "REJECTED"];
-export const ROLES_ENUM = ["USER", "STUDENT", "ADMIN"];
+export const STATUS_ENUM = ["PENDING", "APPROVED", "REJECTED"];
+export const ROLES_ENUM = ["USER", "STUDENT", "ADMIN", "SUPER_ADMIN"];
 
 export interface CreateUserFields {
   fullName: string;

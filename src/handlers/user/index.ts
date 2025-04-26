@@ -8,3 +8,6 @@ export * from "./refresh-token";
 export * from "./update-user-id";
 export * from "./delete-user";
 export * from "./update-profile";
+export * from "./update-user-role";
+export * from "./approve-user";
+export * from "./reject-user";

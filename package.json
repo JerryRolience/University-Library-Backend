@@ -6,13 +6,16 @@
   "scripts": {
     "dev": "ts-node-dev --transpile-only --no-notify src/index.ts",
     "build": "rimraf dist && npx tsc",
-    "start": "node build/index.js"
+    "start": "node build/index.js",
+    "seed:admin": "ts-node ./scripts/seedSuperAdmin.ts",
+    "seed:books": "ts-node ./scripts/seedBooks.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@types/async-lock": "^1.4.2",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.0",
@@ -30,6 +33,7 @@
     "@upstash/ratelimit": "^2.0.5",
     "@upstash/redis": "^1.34.6",
     "@upstash/workflow": "^0.2.12",
+    "async-lock": "^1.4.1",
     "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.3",
     "cookie-parser": "^1.4.7",

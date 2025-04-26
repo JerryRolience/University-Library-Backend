@@ -10,6 +10,9 @@ import {
   signInHandler,
   updateUserLastActivityHandler,
   updateUserProfileHandler,
+  updateUserRoleHandler,
+  approveUserAccountHandler,
+  rejectUserAccountHandler,
 } from "../handlers";
 
 export async function getUsers(
@@ -86,6 +89,64 @@ export async function updateUserProfile(
     next(error);
   }
 }
+
+export async function updateUserRole(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const adminId = req.user?.userId;
+    const { email, role } = req.body;
+
+    if (!adminId) throw new Error("Admin ID is required");
+
+    await updateUserRoleHandler({ adminId, email, role });
+    if (!adminId) throw new Error("Admin ID is required");
+
+    res.status(200).json({ message: "User was updated successfully" });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function approveUserAccount(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const adminId = req.user?.userId;
+    const { email } = req.body;
+
+    if (!adminId) throw new Error("Admin ID is required");
+
+    const message = await approveUserAccountHandler({ adminId, email });
+    res.status(200).json(message);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function rejectUserAccount(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const adminId = req.user?.userId;
+    const { email } = req.body;
+
+    if (!adminId) throw new Error("Admin ID is required");
+
+    const message = await rejectUserAccountHandler({ adminId, email });
+
+    res.status(200).json(message);
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function deleteUser(
   req: Request,
   res: Response,
