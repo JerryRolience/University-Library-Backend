@@ -15,11 +15,7 @@ import {
   rejectUserAccountHandler,
 } from "../handlers";
 
-export async function getUsers(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function getUsers(req: Request, res: Response, next: NextFunction) {
   try {
     const users = await getUsersHandler();
     res.status(200).json({ users });
@@ -32,9 +28,7 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
   try {
     await createUserHandler(req.body);
 
-    res
-      .status(200)
-      .json({ success: true, message: "User created successfully" });
+    res.status(200).json({ success: true, message: "User created successfully" });
   } catch (error) {
     next(error);
   }
@@ -56,11 +50,7 @@ export async function signIn(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function updateUserIDDetails(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function updateUserIDDetails(req: Request, res: Response, next: NextFunction) {
   try {
     const userId = req.user?.userId;
     const userData = req.body;
@@ -73,11 +63,7 @@ export async function updateUserIDDetails(
   }
 }
 
-export async function updateUserProfile(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function updateUserProfile(req: Request, res: Response, next: NextFunction) {
   try {
     const userId = req.user?.userId;
     const profilePic = req.body;
@@ -90,11 +76,7 @@ export async function updateUserProfile(
   }
 }
 
-export async function updateUserRole(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function updateUserRole(req: Request, res: Response, next: NextFunction) {
   try {
     const adminId = req.user?.userId;
     const { email, role } = req.body;
@@ -110,11 +92,7 @@ export async function updateUserRole(
   }
 }
 
-export async function approveUserAccount(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function approveUserAccount(req: Request, res: Response, next: NextFunction) {
   try {
     const adminId = req.user?.userId;
     const { email } = req.body;
@@ -128,11 +106,7 @@ export async function approveUserAccount(
   }
 }
 
-export async function rejectUserAccount(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function rejectUserAccount(req: Request, res: Response, next: NextFunction) {
   try {
     const adminId = req.user?.userId;
     const { email } = req.body;
@@ -147,17 +121,15 @@ export async function rejectUserAccount(
   }
 }
 
-export async function deleteUser(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function deleteUser(req: Request, res: Response, next: NextFunction) {
   try {
-    const userId = req.user?.userId;
+    const requestingUserId = req.user?.userId;
+    const { email } = req.body;
 
-    if (!userId) throw new Error("User ID is required");
+    if (!requestingUserId) throw new Error("Authentication required");
+    if (!email) throw new Error("Target user ID is required");
 
-    await deleteUserHandler(userId);
+    await deleteUserHandler(requestingUserId, email);
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     next(error);
@@ -178,29 +150,19 @@ export async function logout(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function updateUserLastActivity(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function updateUserLastActivity(req: Request, res: Response, next: NextFunction) {
   try {
     const userId = req.user?.userId;
     if (!userId) throw new Error("User not authenticated");
 
     const user = await updateUserLastActivityHandler(userId);
-    res
-      .status(200)
-      .json({ success: true, lastActivityDate: user.lastActivityDate });
+    res.status(200).json({ success: true, lastActivityDate: user.lastActivityDate });
   } catch (error) {
     next(error);
   }
 }
 
-export async function getUserState(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function getUserState(req: Request, res: Response, next: NextFunction) {
   try {
     const email = req.body.email;
     if (!email) throw new Error("Email is required");
@@ -212,11 +174,7 @@ export async function getUserState(
   }
 }
 
-export async function refreshToken(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function refreshToken(req: Request, res: Response, next: NextFunction) {
   try {
     const { refreshToken } = req.body;
     if (!refreshToken) {

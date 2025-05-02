@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["maxlength", "QSTASH"]
+  "cSpell.words": ["maxlength", "QSTASH"],
+  "prettier.printWidth": 200
 }
