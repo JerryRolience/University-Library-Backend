@@ -38,6 +38,8 @@ export async function deleteUserHandler(requestingUserId: string, targetUserEmai
 
         await BorrowRecords.deleteMany({ userId: targetUser.id }).session(session);
       });
+    } catch (error) {
+      throw error;
     } finally {
       await session.endSession();
     }

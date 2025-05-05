@@ -1,19 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import {
-  createBookHandler,
-  getBooksHandler,
-  getBookHandler,
-  borrowBookHandler,
-  getUserBorrowedBooksHandler,
-  borrowRecordsHandler,
-  getBorrowStatusHandler,
-} from "../handlers";
+import { createBookHandler, getBooksHandler, getBookHandler, borrowBookHandler, getUserBorrowedBooksHandler, borrowRecordsHandler, getBorrowStatusHandler, deleteBookHandler } from "../handlers";
 
-export async function createBook(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function createBook(req: Request, res: Response, next: NextFunction) {
   try {
     const book = await createBookHandler(req.body);
 
@@ -23,11 +11,7 @@ export async function createBook(
   }
 }
 
-export async function getAllBooks(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function getAllBooks(req: Request, res: Response, next: NextFunction) {
   try {
     const books = await getBooksHandler();
 
@@ -37,11 +21,7 @@ export async function getAllBooks(
   }
 }
 
-export async function getAllBooksRecord(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function getAllBooksRecord(req: Request, res: Response, next: NextFunction) {
   try {
     const records = await borrowRecordsHandler();
 
@@ -61,11 +41,7 @@ export async function getBook(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function borrowBook(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function borrowBook(req: Request, res: Response, next: NextFunction) {
   try {
     const { bookId } = req.body;
     const userId = req.user?.userId;
@@ -86,9 +62,7 @@ export async function borrowBook(
       return;
     }
 
-    res
-      .status(201)
-      .json({ message: "Book borrowed successfully", data: result.data });
+    res.status(201).json({ message: "Book borrowed successfully", data: result.data });
   } catch (error) {
     if (error instanceof Error) {
       if (error.message.includes("not available")) {
@@ -104,11 +78,7 @@ export async function borrowBook(
   }
 }
 
-export async function getBorrowedBooks(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function getBorrowedBooks(req: Request, res: Response, next: NextFunction) {
   try {
     const userId = req.user?.userId;
     if (!userId) {
@@ -120,11 +90,7 @@ export async function getBorrowedBooks(
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
 
-    const { books, totalCount } = await getUserBorrowedBooksHandler(
-      userId,
-      page,
-      limit
-    );
+    const { books, totalCount } = await getUserBorrowedBooksHandler(userId, page, limit);
 
     res.status(200).json({
       success: true,
@@ -141,11 +107,7 @@ export async function getBorrowedBooks(
   }
 }
 
-export async function getBorrowStatus(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function getBorrowStatus(req: Request, res: Response, next: NextFunction) {
   try {
     const { borrowId } = req.body;
 
@@ -157,6 +119,20 @@ export async function getBorrowStatus(
     const status = await getBorrowStatusHandler(borrowId);
 
     res.status(200).json({ status });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteBook(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { bookId } = req.body;
+    const requestingUserId = req.user?.userId;
+    if (!requestingUserId) throw new Error("Unauthorized");
+    if (!bookId) throw new Error("Book ID is required");
+
+    await deleteBookHandler(requestingUserId, bookId);
+    res.status(200).json("Book deleted successfully");
   } catch (error) {
     next(error);
   }

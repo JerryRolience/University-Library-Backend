@@ -9,7 +9,6 @@ import { AppError, NotFoundError } from "./utils/error-types";
 
 // Load environment variables
 dotenv.config();
-console.log(process.env.PORT);
 
 const app = express();
 const PORT = parseInt(process.env.PORT || "4000", 10);

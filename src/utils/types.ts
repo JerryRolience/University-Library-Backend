@@ -50,6 +50,7 @@ export interface BookType {
   videoUrl: string;
   summary: string;
   del: boolean;
+  deletedBy?: string;
 }
 
 export interface BookFieldsType {
@@ -103,9 +104,7 @@ export type BorrowBookErrorResponse = {
   message: string;
 };
 
-export type BorrowBookResponse =
-  | BorrowBookSuccessResponse
-  | BorrowBookErrorResponse;
+export type BorrowBookResponse = BorrowBookSuccessResponse | BorrowBookErrorResponse;
 
 export interface SearchBook {
   query?: string;
@@ -119,10 +118,7 @@ export interface SearchBook {
 
 export interface SearchCriteria {
   del: { $ne: boolean };
-  $or: (
-    | { title: { $regex: string; $options: string } }
-    | { author: { $regex: string; $options: string } }
-  )[];
+  $or: ({ title: { $regex: string; $options: string } } | { author: { $regex: string; $options: string } })[];
   genre?: string;
   rating?: {
     $gte?: number;
@@ -143,19 +139,12 @@ export interface AdminSearch {
 
 export interface AdminSearchCriteria {
   del: { $ne: boolean };
-  $or: (
-    | { title: { $regex: string; $options: string } }
-    | { author: { $regex: string; $options: string } }
-  )[];
+  $or: ({ title: { $regex: string; $options: string } } | { author: { $regex: string; $options: string } })[];
 }
 
 export interface AdminUserSearchCriteria {
   del: { $ne: boolean };
-  $or: (
-    | { fullName: { $regex: string; $options: string } }
-    | { email: { $regex: string; $options: string } }
-    | { universityID: { $regex: string; $options: string } }
-  )[];
+  $or: ({ fullName: { $regex: string; $options: string } } | { email: { $regex: string; $options: string } } | { universityID: { $regex: string; $options: string } })[];
   status?: string;
   role?: string;
 }

@@ -59,6 +59,10 @@ const bookSchema = new Schema<BookType>(
       type: Boolean,
       default: false,
     },
+    deletedBy: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 );

@@ -12,5 +12,6 @@ bookRoutes.post("/borrow-book", rateLimiter, authenticate, Controllers.borrowBoo
 bookRoutes.get("/get-user-borrowed-books", authenticate, Controllers.getBorrowedBooks);
 bookRoutes.get("/search-book", Controllers.searchBooks);
 bookRoutes.get("/borrow-status", Controllers.getBorrowStatus);
+bookRoutes.post("/delete-book", rateLimiter, authenticate, Controllers.deleteBook);
 
 export { bookRoutes };
