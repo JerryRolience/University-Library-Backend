@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../constants";
 import { randomUUID } from "crypto";
 import { SALT_ROUNDS } from "../utils";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 
 // Load environment variables
