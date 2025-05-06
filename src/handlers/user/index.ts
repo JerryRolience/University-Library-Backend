@@ -11,3 +11,4 @@ export * from "./update-profile";
 export * from "./update-user-role";
 export * from "./approve-user";
 export * from "./reject-user";
+export * from "./admin-analytics";

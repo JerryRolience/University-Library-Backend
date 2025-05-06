@@ -13,6 +13,7 @@ import {
   updateUserRoleHandler,
   approveUserAccountHandler,
   rejectUserAccountHandler,
+  getAdminAnalyticsHandler,
 } from "../handlers";
 
 export async function getUsers(req: Request, res: Response, next: NextFunction) {
@@ -169,6 +170,19 @@ export async function getUserState(req: Request, res: Response, next: NextFuncti
 
     const state = await getUserStateHandler(email);
     res.status(200).json({ state });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getAdminAnalytics(req: Request, res: Response, next: NextFunction) {
+  try {
+    const userId = req.user?.userId;
+    if (!userId) throw new Error("User not authenticated");
+
+    const analytics = await getAdminAnalyticsHandler(userId);
+
+    res.status(200).json(analytics);
   } catch (error) {
     next(error);
   }

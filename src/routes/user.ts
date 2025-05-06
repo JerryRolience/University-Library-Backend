@@ -18,5 +18,6 @@ userRoutes.post("/update-user-profile", authenticate, Controllers.updateUserProf
 userRoutes.post("/update-user-role", authenticate, Controllers.updateUserRole);
 userRoutes.post("/approve-user-account", authenticate, Controllers.approveUserAccount);
 userRoutes.post("/reject-user-account", authenticate, Controllers.rejectUserAccount);
+userRoutes.get("/get-admin-analytics", authenticate, Controllers.getAdminAnalytics);
 
 export { userRoutes };
