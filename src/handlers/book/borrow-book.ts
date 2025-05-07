@@ -87,7 +87,7 @@ export async function borrowBookHandler({ bookId, userId }: { bookId: string; us
       }
     );
   } catch (error) {
-    console.error("Borrow failed:", error);
+    console.error("Borrow Book failed:", error);
     return {
       success: false,
       message: error instanceof Error ? error.message : "Failed to process borrow request",
