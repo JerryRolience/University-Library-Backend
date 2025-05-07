@@ -4,7 +4,7 @@ import { withLock } from "../../lib";
 
 export async function deleteUserHandler(requestingUserId: string, targetUserEmail: string) {
   // unique lock key
-  const lockKey = `delete-user:${requestingUserId}:${targetUserEmail}`;
+  const lockKey = `delete-user:${targetUserEmail}`;
 
   return await withLock(lockKey, async () => {
     const session = await mongoose.startSession();

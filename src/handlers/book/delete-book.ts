@@ -3,7 +3,7 @@ import { Book, BorrowRecords, User } from "../../models";
 import { withLock } from "../../lib";
 
 export async function deleteBookHandler(requestingUserId: string, bookId: string): Promise<void> {
-  const lockKey = `delete-book:${requestingUserId}:${bookId}`;
+  const lockKey = `delete-book:${bookId}`;
 
   return withLock(lockKey, async () => {
     const session = await mongoose.startSession();

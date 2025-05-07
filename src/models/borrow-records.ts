@@ -37,6 +37,9 @@ const borrowRecordsSchema = new Schema<BorrowRecordType>(
       enum: BORROW_STATUS_ENUM,
       default: "BORROWED",
     },
+    returnDate: {
+      type: Date,
+    },
     del: {
       type: Boolean,
       default: false,

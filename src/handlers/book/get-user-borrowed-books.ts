@@ -9,11 +9,7 @@ interface PaginatedBorrowedBooks {
   totalCount: number;
 }
 
-export async function getUserBorrowedBooksHandler(
-  userId: string,
-  page: number = 1,
-  limit: number = 10
-): Promise<PaginatedBorrowedBooks> {
+export async function getUserBorrowedBooksHandler(userId: string, page: number = 1, limit: number = 10): Promise<PaginatedBorrowedBooks> {
   if (!userId || typeof userId !== "string") {
     throw new Error("Invalid user ID");
   }
@@ -27,6 +23,7 @@ export async function getUserBorrowedBooksHandler(
       .select("bookId borrowDate dueDate status")
       .skip(skip)
       .limit(limit)
+      .sort({ createdAt: -1 })
       .lean(),
     BorrowRecords.countDocuments({ userId, del: { $ne: true } }),
   ]);

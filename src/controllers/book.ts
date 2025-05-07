@@ -1,5 +1,17 @@
 import { Request, Response, NextFunction } from "express";
-import { createBookHandler, getBooksHandler, getBookHandler, borrowBookHandler, getUserBorrowedBooksHandler, borrowRecordsHandler, getBorrowStatusHandler, deleteBookHandler } from "../handlers";
+import {
+  createBookHandler,
+  getBooksHandler,
+  getBookHandler,
+  borrowBookHandler,
+  getUserBorrowedBooksHandler,
+  borrowRecordsHandler,
+  getBorrowStatusHandler,
+  deleteBookHandler,
+  updateBookHandler,
+  getSimilarBooksHandler,
+  returnBookHandler,
+} from "../handlers";
 
 export async function createBook(req: Request, res: Response, next: NextFunction) {
   try {
@@ -11,11 +23,50 @@ export async function createBook(req: Request, res: Response, next: NextFunction
   }
 }
 
+export async function updateBook(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { bookData, bookId } = req.body;
+    const book = await updateBookHandler(bookData, bookId);
+
+    res.status(201).json({ message: "Book updated successfully", data: book });
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function getAllBooks(req: Request, res: Response, next: NextFunction) {
   try {
     const books = await getBooksHandler();
 
     res.status(200).json(books);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function getSimilarBooks(req: Request, res: Response, next: NextFunction) {
+  try {
+    const bookId = req.body.bookId;
+    if (!bookId) throw new Error("Book Id is required");
+
+    const books = await getSimilarBooksHandler(bookId);
+    res.status(200).json(books);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function returnBook(req: Request, res: Response, next: NextFunction) {
+  try {
+    const adminId = req.user?.userId;
+    const { borrowId, bookId, userId } = req.body;
+    if (!bookId) throw new Error("Book Id is required");
+    if (!borrowId) throw new Error("Borrow Id is required");
+    if (!userId) throw new Error("User Id is required");
+    if (!adminId) throw new Error("Admin Id is required");
+
+    const message = await returnBookHandler(borrowId, bookId, adminId, userId);
+    res.status(200).json(message);
   } catch (err) {
     next(err);
   }

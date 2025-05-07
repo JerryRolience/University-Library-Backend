@@ -32,7 +32,10 @@ export async function borrowRecordsHandler() {
       }
 
       return {
+        BorrowId: record._id,
+        UserId: user.id,
         BookId: book.id,
+        Book_Id: book._id,
         BookTitle: book.title,
         BookCoverUrl: book.coverUrl,
         BookCoverColor: book.coverColor,
@@ -45,9 +48,19 @@ export async function borrowRecordsHandler() {
         BorrowDate: record.borrowDate,
         DueDate: record.dueDate,
         ReturnedDate: record.returnDate,
+        BookRating: book.rating,
+        BookDescription: book.description,
       };
     })
-    .filter(Boolean); // remove null entries
+    .filter(Boolean)
+    .sort((a, b) => {
+      // Returned books first (those with returnDate)
+      if (a?.ReturnedDate && !b?.ReturnedDate) return -1;
+      if (!a?.ReturnedDate && b?.ReturnedDate) return 1;
+
+      // For books with same return status, sort by due date (ascending)
+      return new Date(a?.DueDate!).getTime() - new Date(b?.DueDate!).getTime();
+    }); // remove null entries
 
   return bookRecords;
 }
